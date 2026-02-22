@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heal Your Mind · Espacio para sanar</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #0f3b2c 0%, #2a5e48 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* Contenedor principal más grande */
+    .chat-container {
+      width: 900px;
+      max-width: 95vw;
+      height: 800px;
+      max-height: 90vh;
+      background: #f2fff5;
+      border-radius: 40px 40px 30px 30px;
+      box-shadow: 0 25px 50px -8px rgba(0, 30, 10, 0.5);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #84b08a;
+    }
+
+    /* Header verde degradado */
+    .chat-header {
+      background: linear-gradient(135deg, #1e4d3a, #0f3b2c);
+      color: #e2ffdb;
+      padding: 25px 20px;
+      text-align: center;
+      border-bottom: 2px solid #7ed18c;
+    }
+
+    .chat-header h2 {
+      font-size: 2rem;
+      font-weight: 400;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      text-shadow: 2px 2px 0 #0b2f1f;
+    }
+
+    .chat-header .status {
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #c7f0c0;
+    }
+
+    .chat-header .status::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      background: #54e07c;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #a0f0b0;
+      animation: pulso 1.8s infinite;
+    }
+
+    @keyframes pulso {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.15); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Área de mensajes (crece para ocupar espacio) */
+    .chat-messages {
+      flex: 1;
+      padding: 25px;
+      overflow-y: auto;
+      background: #f0fff2;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 14px 20px;
+      border-radius: 30px;
+      word-wrap: break-word;
+      line-height: 1.5;
+      font-size: 1rem;
+      box-shadow: 0 4px 8px rgba(0,30,0,0.08);
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: #1f6045;
+      color: white;
+      border-bottom-right-radius: 6px;
+    }
+
+    .message.assistant {
+      align-self: flex-start;
+      background: #deefe2;
+      color: #103d2b;
+      border-bottom-left-radius: 6px;
+      border: 1px solid #b8d9c2;
+    }
+
+    /* ===== SECCIÓN DE OPCIONES (colapsable) ===== */
+    .quick-wrapper {
+      background: #e0f3e4;
+      border-top: 2px dashed #5d9e6f;
+      transition: all 0.3s ease;
+    }
+
+    /* Botón para minimizar/maximizar */
+    .toggle-quick {
+      width: 100%;
+      background: #246b47;
+      border: none;
+      color: #ebffe7;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background 0.2s;
+      border-bottom: 1px solid #7bb892;
+    }
+
+    .toggle-quick:hover {
+      background: #1d543a;
+    }
+
+    .toggle-quick .arrow {
+      font-size: 1.4rem;
+      transition: transform 0.3s;
+    }
+
+    .quick-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 20px;
+      justify-content: center;
+      background: #d9f0de;
+      transition: all 0.3s;
+    }
+
+    /* Cuando está minimizado */
+    .quick-wrapper.collapsed .quick-options {
+      display: none;
+    }
+
+    .quick-wrapper.collapsed .arrow {
+      transform: rotate(-90deg);
+    }
+
+    /* Botones rápidos con diseño más limpio */
+    .quick-btn {
+      background: #ffffffdd;
+      border: 2px solid #2d6b4c;
+      padding: 14px 25px;
+      border-radius: 60px;
+      font-size: 1rem;
+      color: #15432f;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex: 0 1 auto;
+      min-width: 200px;
+      backdrop-filter: blur(2px);
+      box-shadow: 0 4px 10px rgba(40, 90, 60, 0.2);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .quick-btn:hover {
+      background: #c6ffd9;
+      transform: scale(1.02);
+      border-color: #1f8a4f;
+      box-shadow: 0 8px 18px rgba(20, 80, 40, 0.3);
+    }
+
+    /* Área de entrada de texto */
+    .chat-input-area {
+      display: flex;
+      padding: 20px;
+      background: #d4ecd9;
+      border-top: 3px solid #6eab81;
+      gap: 15px;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 16px 22px;
+      border: 2px solid #57946c;
+      border-radius: 50px;
+      outline: none;
+      font-size: 1.05rem;
+      background: #f9fff9;
+      color: #154d31;
+      transition: all 0.2s;
+    }
+
+    .chat-input-area input::placeholder {
+      color: #649b76;
+      font-style: italic;
+    }
+
+    .chat-input-area input:focus {
+      border-color: #1d8343;
+      box-shadow: 0 0 0 4px #b8ebcc;
+    }
+
+    .chat-input-area button {
+      background: #1d6e44;
+      border: none;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      box-shadow: 0 4px 10px #0b4b28;
+    }
+
+    .chat-input-area button:hover {
+      background: #0f512f;
+      transform: scale(1.07);
+    }
+
+    .chat-input-area button svg {
+      width: 26px;
+      height: 26px;
+      fill: white;
+    }
+
+    /* Indicador "escribiendo..." */
+    .typing-indicator {
+      display: flex;
+      gap: 6px;
+      padding: 14px 20px;
+      background: #deefe2;
+      border-radius: 30px;
+      align-self: flex-start;
+      border-bottom-left-radius: 6px;
+    }
+
+    .typing-indicator span {
+      width: 10px;
+      height: 10px;
+      background: #397a55;
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30% { transform: translateY(-12px); opacity: 1; }
+    }
+
+    /* Scroll personalizado */
+    .chat-messages::-webkit-scrollbar {
+      width: 8px;
+    }
+    .chat-messages::-webkit-scrollbar-track {
+      background: #c6e2cf;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: #367a55;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <!-- Header -->
+    <div class="chat-header">
+      <h2>🌱 Heal Your Mind</h2>
+      <div class="status">En línea y escuchando</div>
+    </div>
+
+    <!-- Mensajes (historial) -->
+    <div id="chat-messages" class="chat-messages"></div>
+
+    <!-- SECCIÓN DE OPCIONES COLAPSABLE -->
+    <div class="quick-wrapper" id="quickWrapper">
+      <button class="toggle-quick" id="toggleQuickBtn">
+        <span class="arrow">▼</span> 
+        <span>Herramientas de apoyo</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="quick-options" id="quickOptions">
+        <button class="quick-btn" onclick="sendQuickMessage('Necesito hablar con alguien')">🗣️ Necesito hablar con alguien</button>
+        <button class="quick-btn" onclick="sendQuickMessage('Me siento abrumado/a')">😔 Me siento abrumado/a</button>
+        <button class="quick-btn" onclick="sendQuickMessage('Quiero técnicas de relajación')">🧘 Quiero técnicas de relajación</button>
+        <button class="quick-btn" onclick="sendQuickMessage('Solo quiero desahogarme')">💬 Solo quiero desahogarme</button>
+      </div>
+    </div>
+
+    <!-- Área de escribir mensaje -->
+    <div class="chat-input-area">
+      <input type="text" id="msg" placeholder="Comparte lo que sientes..." />
+      <button onclick="enviar()">
+        <svg viewBox="0 0 24 24">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // System prompt (empático, breve por defecto, pero se extiende si pides más)
+    let conversation = [
+      { 
+        role: "system", 
+        content: "Eres un asistente empático, cálido y cercano. Por defecto, responde de manera breve y natural (2-3 oraciones), como en una conversación fluida entre amigos. Sin embargo, si el usuario te pide explícitamente más detalles, una explicación más larga o 'más texto', puedes extenderte y dar una respuesta más completa y detallada. Mantén siempre un tono amigable y humano. Usa un lenguaje de apoyo emocional." 
+      }
+    ];
+
+    const chatDiv = document.getElementById("chat-messages");
+
+    // Función para agregar mensajes al chat
+    function agregarMensaje(texto, tipo) {
+      const div = document.createElement("div");
+      div.classList.add("message", tipo);
+      div.innerText = texto;
+      chatDiv.appendChild(div);
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+    // Mostrar indicador de escritura
+    function mostrarEscribiendo() {
+      const div = document.createElement("div");
+      div.classList.add("typing-indicator");
+      div.id = "typing";
+      div.innerHTML = '<span></span><span></span><span></span>';
+      chatDiv.appendChild(div);
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+    function ocultarEscribiendo() {
+      const typing = document.getElementById("typing");
+      if (typing) typing.remove();
+    }
+
+    // Enviar mensaje (tanto desde input como desde botones rápidos)
+    async function enviarMensaje(mensaje) {
+      if (!mensaje.trim()) return;
+
+      // Mensaje del usuario
+      agregarMensaje(mensaje, "user");
+      conversation.push({ role: "user", content: mensaje });
+
+      // Input se limpia si es desde el campo de texto
+      const input = document.getElementById("msg");
+      if (input.value.trim() === mensaje) input.value = "";
+
+      mostrarEscribiendo();
+
+      try {
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: conversation })
+        });
+
+        const data = await res.json();
+        ocultarEscribiendo();
+
+        if (data.reply) {
+          agregarMensaje(data.reply, "assistant");
+          conversation.push({ role: "assistant", content: data.reply });
+        } else {
+          agregarMensaje("Lo siento, no pude procesar eso. ¿Puedes repetirlo?", "assistant");
+        }
+      } catch (error) {
+        ocultarEscribiendo();
+        agregarMensaje("Hubo un error de conexión. Intenta de nuevo.", "assistant");
+        console.error(error);
+      }
+    }
+
+    // Wrapper para enviar desde el input
+    function enviar() {
+      const input = document.getElementById("msg");
+      enviarMensaje(input.value.trim());
+    }
+
+    // Función para botones rápidos
+    function sendQuickMessage(msg) {
+      enviarMensaje(msg);
+    }
+
+    // Enviar con Enter
+    document.getElementById("msg").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        enviar();
+      }
+    });
+
+    // ---------- FUNCIONALIDAD MINIMIZAR / MAXIMIZAR OPCIONES ----------
+    const wrapper = document.getElementById('quickWrapper');
+    const toggleBtn = document.getElementById('toggleQuickBtn');
+
+    toggleBtn.addEventListener('click', () => {
+      wrapper.classList.toggle('collapsed');
+      // Cambiar texto del botón (opcional)
+      const arrows = toggleBtn.querySelectorAll('.arrow');
+      if (wrapper.classList.contains('collapsed')) {
+        // Opcional: cambiar texto o tooltip
+        toggleBtn.setAttribute('title', 'Mostrar opciones');
+      } else {
+        toggleBtn.setAttribute('title', 'Ocultar opciones');
+      }
+    });
+
+    // Por defecto no está colapsado (puedes cambiarlo a true si quieres que empiece minimizado)
+    // wrapper.classList.add('collapsed'); // descomenta si quieres que inicie oculto
+
+    // Mensaje de bienvenida (opcional)
+    window.onload = function() {
+      // Si quieres un saludo automático:
+      // enviarMensaje("Hola, estoy aquí para ti. ¿Cómo te sientes hoy?");
+    };
+  </script>
+</body>
+</html>
