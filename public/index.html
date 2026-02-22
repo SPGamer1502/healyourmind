@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Heal Your Mind · Apoyo Empático</title>
+  <title>Heal Your Mind · Apoyo emocional</title>
   <style>
     * {
       margin: 0;
@@ -23,29 +23,27 @@
 
     .chat-container {
       width: 900px;
-      max-width: 100%;
+      max-width: 95%;
       height: 750px;
       background: #f0f7f0;
       border-radius: 40px;
-      box-shadow: 0 25px 50px -8px rgba(0, 30, 0, 0.4);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      border: 2px solid #a3d8a3;
+      border: 2px solid #409f7e;
     }
 
-    /* Header */
     .chat-header {
-      background: #1f4f2b;
+      background: #1f4d3a;
       color: white;
       padding: 20px 25px;
       text-align: center;
-      border-bottom: 2px solid #7daf7d;
     }
 
     .chat-header h2 {
       font-size: 2rem;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       letter-spacing: 1px;
       font-weight: 500;
     }
@@ -64,27 +62,26 @@
       display: inline-block;
       width: 12px;
       height: 12px;
-      background: #7ae07a;
+      background: #80ed99;
       border-radius: 50%;
-      box-shadow: 0 0 8px #a0ffa0;
       animation: pulse 1.8s infinite;
+      box-shadow: 0 0 8px #a7f0ba;
     }
 
     @keyframes pulse {
       0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.15); }
+      50% { opacity: 0.7; transform: scale(1.15); }
       100% { opacity: 1; transform: scale(1); }
     }
 
-    /* Área de mensajes */
     .chat-messages {
       flex: 1;
       padding: 25px;
       overflow-y: auto;
-      background: #f8fff8;
+      background: #eaf5ea;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 18px;
     }
 
     .message {
@@ -94,135 +91,128 @@
       word-wrap: break-word;
       line-height: 1.5;
       font-size: 1rem;
-      box-shadow: 0 2px 5px rgba(0,30,0,0.1);
+      box-shadow: 0 4px 8px rgba(0, 40, 20, 0.1);
     }
 
-    .message.user {
+    .user {
       align-self: flex-end;
-      background: #1f4f2b;
+      background: #1f4d3a;
       color: white;
       border-bottom-right-radius: 6px;
-      border: 1px solid #2f6f3b;
     }
 
-    .message.assistant {
+    .assistant {
       align-self: flex-start;
-      background: #e2f0e2;
-      color: #153f1f;
-      border-bottom-left-radius: 6px;
-      border: 1px solid #bcd9b4;
-    }
-
-    /* Opciones rápidas (minimizables) */
-    .quick-options-container {
       background: white;
-      border-top: 1px solid #b8d9b0;
-      border-bottom: 1px solid #b8d9b0;
+      color: #1e2e24;
+      border: 1px solid #b7e0cf;
+      border-bottom-left-radius: 6px;
     }
 
-    .quick-options-header {
+    /* Sección de opciones rápidas (minimizable) - SIN IMAGEN */
+    .quick-section {
+      background: white;
+      border-top: 2px solid #409f7e;
+      border-bottom: 2px solid #409f7e;
+    }
+
+    .quick-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 20px;
-      background: #e0f0e0;
+      padding: 15px 20px;
+      background: #dcf2e9;
       cursor: pointer;
-      user-select: none;
-    }
-
-    .quick-options-header span {
       font-weight: 600;
-      color: #1f4f2b;
-      font-size: 1rem;
+      color: #1d4233;
+      transition: background 0.2s;
     }
 
-    .toggle-icon {
+    .quick-header:hover {
+      background: #c8e6d9;
+    }
+
+    .quick-header span:last-child {
       font-size: 1.4rem;
-      color: #1f4f2b;
+      user-select: none;
     }
 
     .quick-options {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      padding: 18px;
+      padding: 20px;
       background: #f5fff5;
-      justify-content: center;
-      border-top: 1px dashed #9fc99f;
+      transition: all 0.3s ease;
     }
 
-    .quick-options.hidden {
+    .quick-options.collapsed {
       display: none;
     }
 
     .quick-btn {
-      background: #d4ecd4;
-      border: none;
+      background: #e5f4eb;
+      border: 1px solid #2f6b53;
       padding: 14px 22px;
       border-radius: 40px;
-      font-size: 0.95rem;
-      color: #1f4f2b;
+      font-size: 1rem;
+      color: #1d4e3d;
       cursor: pointer;
-      transition: all 0.25s;
+      transition: all 0.25s ease;
       flex: 1 1 auto;
-      min-width: 170px;
-      box-shadow: 0 2px 6px rgba(20, 70, 0, 0.2);
+      min-width: 180px;
+      box-shadow: 0 2px 6px rgba(0, 60, 30, 0.1);
       font-weight: 500;
-      border: 1px solid #a3d8a3;
     }
 
     .quick-btn:hover {
-      background: #c0e4c0;
-      transform: scale(1.02);
-      box-shadow: 0 6px 14px rgba(30, 90, 30, 0.3);
+      background: #c0e0d2;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(36, 113, 82, 0.3);
+      border-color: #1e8b5e;
     }
 
-    /* Área de entrada */
     .chat-input {
       display: flex;
       padding: 20px;
       background: white;
+      border-top: 2px solid #409f7e;
       gap: 12px;
-      border-top: 1px solid #b8d9b0;
     }
 
     .chat-input input {
       flex: 1;
       padding: 16px 20px;
-      border: 2px solid #b8d9b0;
-      border-radius: 40px;
+      border: 2px solid #c0dfd2;
+      border-radius: 50px;
       outline: none;
       font-size: 1rem;
-      background: #fafffa;
-      color: #1a3a1a;
-    }
-
-    .chat-input input::placeholder {
-      color: #6f9e6f;
-      font-style: italic;
+      transition: 0.2s;
+      background: #f6fff6;
     }
 
     .chat-input input:focus {
-      border-color: #2d6a4f;
+      border-color: #1f7b5c;
+      box-shadow: 0 0 0 3px rgba(42, 141, 106, 0.3);
     }
 
     .chat-input button {
-      background: #1f4f2b;
+      background: #1f4d3a;
       color: white;
       border: none;
-      width: 58px;
-      height: 58px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.2s, transform 0.1s;
-      box-shadow: 0 4px 8px rgba(0,40,0,0.3);
+      transition: 0.2s;
+      box-shadow: 0 4px 10px rgba(23, 78, 56, 0.4);
     }
 
     .chat-input button:hover {
-      background: #2f7040;
+      background: #143b2c;
       transform: scale(1.05);
     }
 
@@ -232,63 +222,64 @@
       fill: white;
     }
 
-    /* Indicador de escritura */
     .typing-indicator {
       display: flex;
-      gap: 5px;
-      padding: 14px 20px;
-      background: #e2f0e2;
+      gap: 6px;
+      padding: 16px 22px;
+      background: white;
       border-radius: 28px;
       align-self: flex-start;
       border-bottom-left-radius: 6px;
-      border: 1px solid #bcd9b4;
+      border: 1px solid #b7e0cf;
+      margin-top: 5px;
     }
 
     .typing-indicator span {
       width: 10px;
       height: 10px;
-      background: #2f6f3b;
+      background: #2d6a4f;
       border-radius: 50%;
-      animation: bounce 1.4s infinite;
+      animation: typing 1.4s infinite;
     }
 
-    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
 
-    @keyframes bounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
       30% { transform: translateY(-12px); opacity: 1; }
     }
   </style>
 </head>
 <body>
   <div class="chat-container">
-    <!-- Header -->
     <div class="chat-header">
-      <h2>🌱 Heal Your Mind</h2>
-      <div class="status">En línea y escuchando con empatía</div>
+      <h2>🌿 Heal Your Mind</h2>
+      <div class="status">En línea y escuchando</div>
     </div>
 
-    <!-- Mensajes -->
     <div id="chat-messages" class="chat-messages"></div>
 
-    <!-- Opciones rápidas (minimizables) -->
-    <div class="quick-options-container">
-      <div class="quick-options-header" id="toggleQuickOptions">
-        <span>🧘 Herramientas rápidas de apoyo</span>
-        <span class="toggle-icon" id="toggleIcon">▼</span>
+    <!-- Sección de opciones rápidas (sin imagen) -->
+    <div class="quick-section">
+      <div class="quick-header" onclick="toggleQuickOptions()">
+        <span>📋 Temas rápidos</span>  <!-- Cambiado a "Temas rápidos" sin imagen -->
+        <span id="quick-toggle">▼</span>
       </div>
-      <div class="quick-options" id="quickOptions">
-        <button class="quick-btn" onclick="sendQuickMessage('Necesito hablar con alguien ahora')">🗣️ Hablar con alguien</button>
-        <button class="quick-btn" onclick="sendQuickMessage('Me siento abrumado/a, necesito apoyo')">😔 Me siento abrumado/a</button>
-        <button class="quick-btn" onclick="sendQuickMessage('¿Puedes darme técnicas de relajación?')">🧘 Técnicas de relajación</button>
-        <button class="quick-btn" onclick="sendQuickMessage('Solo quiero desahogarme, escúchame')">💬 Desahogarme</button>
+      <div id="quick-options" class="quick-options">
+        <button class="quick-btn" onclick="sendQuickMessage('Necesito hablar con alguien')">🗣️ Hablar con alguien</button>
+        <button class="quick-btn" onclick="sendQuickMessage('Me siento abrumado/a')">😔 Me siento abrumado/a</button>
+        <button class="quick-btn" onclick="sendQuickMessage('Quiero técnicas de relajación')">🧘 Técnicas de relajación</button>
+        <button class="quick-btn" onclick="sendQuickMessage('Solo quiero desahogarme')">💬 Solo desahogarme</button>
       </div>
     </div>
 
-    <!-- Input -->
     <div class="chat-input">
-      <input type="text" id="msg" placeholder="Comparte lo que sientes... (escribe 'más' si quieres que me extienda)" />
+      <input type="text" id="msg" placeholder="Comparte lo que sientes..." autocomplete="off" />
       <button onclick="enviar()">
         <svg viewBox="0 0 24 24">
           <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
@@ -298,28 +289,29 @@
   </div>
 
   <script>
-    // System prompt ajustado: empático, breve por defecto (máx 2 párrafos), se explaya solo si se lo piden explícitamente
+    // System prompt mejorado (empático, breve por defecto, se explaya cuando se le pide)
     let conversation = [
       { 
         role: "system", 
-        content: "Eres un asistente de apoyo emocional, empático, cálido y muy humano. Tu misión es ofrecer consuelo, reflexión y compañía. Por defecto, responde de manera breve y concisa: máximo dos párrafos cortos (unas 4-5 líneas en total). Usa un tono cercano, como un amigo que escucha y entiende. No des grandes listas ni explicaciones largas a menos que el usuario lo pida explícitamente con frases como 'cuéntame más', 'explícate más', 'dame más detalles', 'quiero más', o 'más'. Cuando el usuario solicite explícitamente más información, puedes extenderte y dar respuestas más largas y detalladas (por ejemplo, si pide 20 tips, puedes darle 20 tips). Pero si no pide más, mantén la brevedad y la calidez. Siempre valida los sentimientos del usuario y ofrece apoyo." 
+        content: "Eres un asistente de apoyo emocional, extremadamente empático, cálido y humano. Tu objetivo es hacer sentir acompañada a la persona, validar sus emociones y ofrecer consuelo o reflexión. Por defecto, responde de manera breve: máximo 2 párrafos cortos (unas 4-5 líneas en total), a menos que el usuario te pida explícitamente que te extiendas (por ejemplo: 'cuéntame más', 'dame más detalles', 'necesito más consejos', 'quiero 20 tips', 'expláyate', etc.). Cuando te pidan más, puedes dar respuestas más largas y detalladas. Mantén siempre un tono cercano, como un amigo que escucha sin juzgar." 
       }
     ];
 
     const chatDiv = document.getElementById("chat-messages");
 
-    // Función para minimizar/maximizar opciones rápidas
-    const quickOptions = document.getElementById("quickOptions");
-    const toggleIcon = document.getElementById("toggleIcon");
-    document.getElementById("toggleQuickOptions").addEventListener("click", () => {
-      quickOptions.classList.toggle("hidden");
-      toggleIcon.textContent = quickOptions.classList.contains("hidden") ? "▶" : "▼";
-    });
-
     function agregarMensaje(texto, tipo) {
       const div = document.createElement("div");
       div.classList.add("message", tipo);
-      div.innerText = texto;
+      if (tipo === 'assistant' && texto.includes('\n')) {
+        const parrafos = texto.split('\n').filter(p => p.trim() !== '');
+        parrafos.forEach(p => {
+          const pElem = document.createElement('p');
+          pElem.innerText = p;
+          div.appendChild(pElem);
+        });
+      } else {
+        div.innerText = texto;
+      }
       chatDiv.appendChild(div);
       chatDiv.scrollTop = chatDiv.scrollHeight;
     }
@@ -340,7 +332,6 @@
 
     async function enviarMensaje(mensaje) {
       if (!mensaje) return;
-
       agregarMensaje(mensaje, "user");
       conversation.push({ role: "user", content: mensaje });
 
@@ -352,20 +343,22 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ messages: conversation })
         });
-
         const data = await res.json();
         ocultarEscribiendo();
 
         if (data.reply) {
           agregarMensaje(data.reply, "assistant");
           conversation.push({ role: "assistant", content: data.reply });
+          // Limitar historial a 10 intercambios (opcional)
+          if (conversation.length > 21) {
+            conversation.splice(1, 2);
+          }
         } else {
-          agregarMensaje("Lo siento, no pude procesar eso. ¿Puedes repetirlo?", "assistant");
+          agregarMensaje("Lo siento, hubo un error. Intenta de nuevo.", "assistant");
         }
       } catch (error) {
         ocultarEscribiendo();
-        agregarMensaje("Parece que hay problemas de conexión. Pero sigo aquí para ti.", "assistant");
-        console.error(error);
+        agregarMensaje("Error de conexión. ¿Estás conectado a internet?", "assistant");
       }
     }
 
@@ -382,16 +375,21 @@
       enviarMensaje(mensaje);
     }
 
+    function toggleQuickOptions() {
+      const options = document.getElementById("quick-options");
+      const toggle = document.getElementById("quick-toggle");
+      options.classList.toggle("collapsed");
+      toggle.innerText = options.classList.contains("collapsed") ? "▶" : "▼";
+    }
+
     document.getElementById("msg").addEventListener("keypress", function(e) {
-      if (e.key === "Enter") {
-        enviar();
-      }
+      if (e.key === "Enter") enviar();
     });
 
-    // Mensaje de bienvenida opcional (puedes quitarlo si no quieres)
-    window.onload = function() {
-      // enviarMensaje("Hola, estoy aquí para escucharte. ¿Cómo te sientes hoy?");
-    };
+    // Mensaje de bienvenida opcional (descomentar si se quiere)
+    // window.onload = function() {
+    //   enviarMensaje("Hola, estoy aquí para escucharte. ¿Cómo te sientes hoy?");
+    // };
   </script>
 </body>
 </html>
