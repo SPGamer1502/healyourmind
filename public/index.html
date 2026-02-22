@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heal Your Mind · Apoyo Empático</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #1b3b2b 0%, #2d6a4f 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .chat-container {
+      width: 900px;
+      max-width: 100%;
+      height: 750px;
+      background: #f0f7f0;
+      border-radius: 40px;
+      box-shadow: 0 25px 50px -8px rgba(0, 30, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 2px solid #a3d8a3;
+    }
+
+    /* Header */
+    .chat-header {
+      background: #1f4f2b;
+      color: white;
+      padding: 20px 25px;
+      text-align: center;
+      border-bottom: 2px solid #7daf7d;
+    }
+
+    .chat-header h2 {
+      font-size: 2rem;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+      font-weight: 500;
+    }
+
+    .chat-header .status {
+      font-size: 1rem;
+      opacity: 0.95;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .chat-header .status::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: #7ae07a;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #a0ffa0;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.15); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Área de mensajes */
+    .chat-messages {
+      flex: 1;
+      padding: 25px;
+      overflow-y: auto;
+      background: #f8fff8;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 14px 20px;
+      border-radius: 28px;
+      word-wrap: break-word;
+      line-height: 1.5;
+      font-size: 1rem;
+      box-shadow: 0 2px 5px rgba(0,30,0,0.1);
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: #1f4f2b;
+      color: white;
+      border-bottom-right-radius: 6px;
+      border: 1px solid #2f6f3b;
+    }
+
+    .message.assistant {
+      align-self: flex-start;
+      background: #e2f0e2;
+      color: #153f1f;
+      border-bottom-left-radius: 6px;
+      border: 1px solid #bcd9b4;
+    }
+
+    /* Opciones rápidas (minimizables) */
+    .quick-options-container {
+      background: white;
+      border-top: 1px solid #b8d9b0;
+      border-bottom: 1px solid #b8d9b0;
+    }
+
+    .quick-options-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background: #e0f0e0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .quick-options-header span {
+      font-weight: 600;
+      color: #1f4f2b;
+      font-size: 1rem;
+    }
+
+    .toggle-icon {
+      font-size: 1.4rem;
+      color: #1f4f2b;
+    }
+
+    .quick-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 18px;
+      background: #f5fff5;
+      justify-content: center;
+      border-top: 1px dashed #9fc99f;
+    }
+
+    .quick-options.hidden {
+      display: none;
+    }
+
+    .quick-btn {
+      background: #d4ecd4;
+      border: none;
+      padding: 14px 22px;
+      border-radius: 40px;
+      font-size: 0.95rem;
+      color: #1f4f2b;
+      cursor: pointer;
+      transition: all 0.25s;
+      flex: 1 1 auto;
+      min-width: 170px;
+      box-shadow: 0 2px 6px rgba(20, 70, 0, 0.2);
+      font-weight: 500;
+      border: 1px solid #a3d8a3;
+    }
+
+    .quick-btn:hover {
+      background: #c0e4c0;
+      transform: scale(1.02);
+      box-shadow: 0 6px 14px rgba(30, 90, 30, 0.3);
+    }
+
+    /* Área de entrada */
+    .chat-input {
+      display: flex;
+      padding: 20px;
+      background: white;
+      gap: 12px;
+      border-top: 1px solid #b8d9b0;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 16px 20px;
+      border: 2px solid #b8d9b0;
+      border-radius: 40px;
+      outline: none;
+      font-size: 1rem;
+      background: #fafffa;
+      color: #1a3a1a;
+    }
+
+    .chat-input input::placeholder {
+      color: #6f9e6f;
+      font-style: italic;
+    }
+
+    .chat-input input:focus {
+      border-color: #2d6a4f;
+    }
+
+    .chat-input button {
+      background: #1f4f2b;
+      color: white;
+      border: none;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 4px 8px rgba(0,40,0,0.3);
+    }
+
+    .chat-input button:hover {
+      background: #2f7040;
+      transform: scale(1.05);
+    }
+
+    .chat-input button svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+
+    /* Indicador de escritura */
+    .typing-indicator {
+      display: flex;
+      gap: 5px;
+      padding: 14px 20px;
+      background: #e2f0e2;
+      border-radius: 28px;
+      align-self: flex-start;
+      border-bottom-left-radius: 6px;
+      border: 1px solid #bcd9b4;
+    }
+
+    .typing-indicator span {
+      width: 10px;
+      height: 10px;
+      background: #2f6f3b;
+      border-radius: 50%;
+      animation: bounce 1.4s infinite;
+    }
+
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
+      30% { transform: translateY(-12px); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <!-- Header -->
+    <div class="chat-header">
+      <h2>🌱 Heal Your Mind</h2>
+      <div class="status">En línea y escuchando con empatía</div>
+    </div>
+
+    <!-- Mensajes -->
+    <div id="chat-messages" class="chat-messages"></div>
+
+    <!-- Opciones rápidas (minimizables) -->
+    <div class="quick-options-container">
+      <div class="quick-options-header" id="toggleQuickOptions">
+        <span>🧘 Herramientas rápidas de apoyo</span>
+        <span class="toggle-icon" id="toggleIcon">▼</span>
+      </div>
+      <div class="quick-options" id="quickOptions">
+        <button class="quick-btn" onclick="sendQuickMessage('Necesito hablar con alguien ahora')">🗣️ Hablar con alguien</button>
+        <button class="quick-btn" onclick="sendQuickMessage('Me siento abrumado/a, necesito apoyo')">😔 Me siento abrumado/a</button>
+        <button class="quick-btn" onclick="sendQuickMessage('¿Puedes darme técnicas de relajación?')">🧘 Técnicas de relajación</button>
+        <button class="quick-btn" onclick="sendQuickMessage('Solo quiero desahogarme, escúchame')">💬 Desahogarme</button>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input">
+      <input type="text" id="msg" placeholder="Comparte lo que sientes... (escribe 'más' si quieres que me extienda)" />
+      <button onclick="enviar()">
+        <svg viewBox="0 0 24 24">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // System prompt ajustado: empático, breve por defecto (máx 2 párrafos), se explaya solo si se lo piden explícitamente
+    let conversation = [
+      { 
+        role: "system", 
+        content: "Eres un asistente de apoyo emocional, empático, cálido y muy humano. Tu misión es ofrecer consuelo, reflexión y compañía. Por defecto, responde de manera breve y concisa: máximo dos párrafos cortos (unas 4-5 líneas en total). Usa un tono cercano, como un amigo que escucha y entiende. No des grandes listas ni explicaciones largas a menos que el usuario lo pida explícitamente con frases como 'cuéntame más', 'explícate más', 'dame más detalles', 'quiero más', o 'más'. Cuando el usuario solicite explícitamente más información, puedes extenderte y dar respuestas más largas y detalladas (por ejemplo, si pide 20 tips, puedes darle 20 tips). Pero si no pide más, mantén la brevedad y la calidez. Siempre valida los sentimientos del usuario y ofrece apoyo." 
+      }
+    ];
+
+    const chatDiv = document.getElementById("chat-messages");
+
+    // Función para minimizar/maximizar opciones rápidas
+    const quickOptions = document.getElementById("quickOptions");
+    const toggleIcon = document.getElementById("toggleIcon");
+    document.getElementById("toggleQuickOptions").addEventListener("click", () => {
+      quickOptions.classList.toggle("hidden");
+      toggleIcon.textContent = quickOptions.classList.contains("hidden") ? "▶" : "▼";
+    });
+
+    function agregarMensaje(texto, tipo) {
+      const div = document.createElement("div");
+      div.classList.add("message", tipo);
+      div.innerText = texto;
+      chatDiv.appendChild(div);
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+    function mostrarEscribiendo() {
+      const div = document.createElement("div");
+      div.classList.add("typing-indicator");
+      div.id = "typing";
+      div.innerHTML = '<span></span><span></span><span></span>';
+      chatDiv.appendChild(div);
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+    function ocultarEscribiendo() {
+      const typing = document.getElementById("typing");
+      if (typing) typing.remove();
+    }
+
+    async function enviarMensaje(mensaje) {
+      if (!mensaje) return;
+
+      agregarMensaje(mensaje, "user");
+      conversation.push({ role: "user", content: mensaje });
+
+      mostrarEscribiendo();
+
+      try {
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: conversation })
+        });
+
+        const data = await res.json();
+        ocultarEscribiendo();
+
+        if (data.reply) {
+          agregarMensaje(data.reply, "assistant");
+          conversation.push({ role: "assistant", content: data.reply });
+        } else {
+          agregarMensaje("Lo siento, no pude procesar eso. ¿Puedes repetirlo?", "assistant");
+        }
+      } catch (error) {
+        ocultarEscribiendo();
+        agregarMensaje("Parece que hay problemas de conexión. Pero sigo aquí para ti.", "assistant");
+        console.error(error);
+      }
+    }
+
+    function enviar() {
+      const input = document.getElementById("msg");
+      const mensaje = input.value.trim();
+      if (mensaje) {
+        enviarMensaje(mensaje);
+        input.value = "";
+      }
+    }
+
+    function sendQuickMessage(mensaje) {
+      enviarMensaje(mensaje);
+    }
+
+    document.getElementById("msg").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        enviar();
+      }
+    });
+
+    // Mensaje de bienvenida opcional (puedes quitarlo si no quieres)
+    window.onload = function() {
+      // enviarMensaje("Hola, estoy aquí para escucharte. ¿Cómo te sientes hoy?");
+    };
+  </script>
+</body>
+</html>
